@@ -1,13 +1,20 @@
 {
   "version": 2,
-  "buildCommand": "npm install && npm run build",
-  "devCommand": "npm run dev",
-  "outputDirectory": "dist",
   "framework": "vite",
-  "rewrites": [
+  "buildCommand": "npm ci && npm run build",
+  "devCommand": "npm run dev",
+  "installCommand": "npm ci",
+  "outputDirectory": "dist",
+  "builds": [
     {
-      "source": "/(.*)",
-      "destination": "/index.html"
+      "src": "package.json",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
     }
   ]
 }
