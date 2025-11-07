@@ -1,0 +1,2 @@
+- [x] Update server/index.js to restrict CORS origins to 'https://employeefrontend-mu.vercel.app/'
+- [ ] Test the server to ensure CORS works correctly with the new origin
