@@ -1,16 +1,10 @@
 {
   "version": 2,
   "framework": "vite",
-  "buildCommand": "npm ci && npm run build",
+  "buildCommand": "npm install && npm run build",
   "devCommand": "npm run dev",
-  "installCommand": "npm ci",
+  "installCommand": "npm install",
   "outputDirectory": "dist",
-  "builds": [
-    {
-      "src": "package.json",
-      "use": "@vercel/node"
-    }
-  ],
   "routes": [
     {
       "src": "/(.*)",
