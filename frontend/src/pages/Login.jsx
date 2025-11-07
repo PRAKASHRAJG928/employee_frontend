@@ -38,8 +38,18 @@ const Login = () => {
     setError(null);
     setLoading(true);
     try {
-      console.log('Attempting login to:', `${API_BASE_URL}/api/auth/login`);
-      const response = await api.post("/api/auth/login", { email, password });
+      console.log('Attempting login...');
+      const response = await axios.post('https://employee-api-backend.vercel.app/api/auth/login', 
+        { email, password },
+        { 
+          headers: { 
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          withCredentials: true
+        }
+      );
+      console.log('Raw response:', response);
       console.log("Login response:", response.data);
       if (response.data.success) {
         login(response.data.user);
