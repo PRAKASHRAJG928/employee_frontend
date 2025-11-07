@@ -3,15 +3,18 @@ import axios from "axios";
 import { useAuth } from "../context/useAuth";
 import { useNavigate } from "react-router-dom";
 
-// API base URL - change this based on environment
-const API_BASE_URL = "https://employee-api-backend.vercel.app";
+// API base URL - prefer Vite env var `VITE_API_URL` (set this in Vercel env vars)
+// e.g. VITE_API_URL=https://employee-api-backend.vercel.app
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://employee-api-backend.vercel.app';
 
 // Create axios instance with default config
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
-    'Content-Type': 'application/json'
-  }
+    'Content-Type': 'application/json',
+    Accept: 'application/json'
+  },
+  withCredentials: true,
 });
 
 const Login = () => {
@@ -38,17 +41,10 @@ const Login = () => {
     setError(null);
     setLoading(true);
     try {
-      console.log('Attempting login...');
-      const response = await axios.post('https://employee-api-backend.vercel.app/api/auth/login', 
-        { email, password },
-        { 
-          headers: { 
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-          },
-          withCredentials: true
-        }
-      );
+      console.log('Attempting login to', `${API_BASE_URL}/api/auth/login`);
+  // Use absolute URL to avoid accidental relative requests in production
+  const loginUrl = `${API_BASE_URL}/api/auth/login`;
+  const response = await api.post(loginUrl, { email, password });
       console.log('Raw response:', response);
       console.log("Login response:", response.data);
       if (response.data.success) {
@@ -63,21 +59,22 @@ const Login = () => {
     } catch (error) {
       // Log detailed error information for debugging
       console.error('Login error details:', {
-        error,
-        status: error.response?.status,
-        data: error.response?.data,
-        message: error.message
+        status: error?.response?.status,
+        data: error?.response?.data,
+        message: error?.message,
       });
 
-      if (error.response?.status === 404) {
-        setError('Login service is not available (404). Please check the API endpoint.');
-      } else if (error.response?.data?.error) {
-        setError(error.response.data.error);
-      } else if (!error.response && error.request) {
-        setError('Cannot connect to the server. Please check your internet connection.');
-      } else {
-        setError(`Login failed: ${error.message || 'Unknown error'}`);
+      // Normalize message to a string (prevents React from trying to render objects)
+      let msg = 'Login failed. Please try again.';
+      if (error?.response?.data) {
+        const d = error.response.data;
+        if (typeof d === 'string') msg = d;
+        else if (d.error && typeof d.error === 'string') msg = d.error;
+        else msg = JSON.stringify(d);
+      } else if (error?.message) {
+        msg = error.message;
       }
+      setError(msg);
     } finally {
       setLoading(false);
     }
@@ -136,7 +133,9 @@ const Login = () => {
 
       {/* Login Card */}
       <div className="w-full max-w-md bg-gray-900/70 backdrop-blur-lg p-8 rounded-3xl shadow-[0_0_25px_rgba(59,130,246,0.2)] border border-gray-700 z-10">
-        {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+        {error && (
+          <p className="text-red-500 text-center mb-4">{typeof error === 'string' ? error : JSON.stringify(error)}</p>
+        )}
 
         <h2 className="text-3xl font-bold text-center mb-8 text-white font-pacifico">
           Login
