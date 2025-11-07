@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import api from "../utils/axios";
+import axios from "axios";
 import { useAuth } from "../context/useAuth";
 import { useNavigate } from "react-router-dom";
 
@@ -27,10 +27,14 @@ const Login = () => {
     setError(null);
     setLoading(true);
     try {
-      const apiUrl = import.meta.env.PROD 
-        ? 'https://employee-api-backend.vercel.app/api/auth/login'
-        : '/api/auth/login';
-      const response = await axios.post(apiUrl, { email, password });
+      const response = await axios.post("https://employee-api-backend.vercel.app/api/auth/login", { 
+        email, 
+        password 
+      }, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
       console.log("Login response:", response.data);
       if (response.data.success) {
         login(response.data.user);
@@ -43,14 +47,16 @@ const Login = () => {
       }
     } catch (error) {
       console.error('Login error:', error);
-      if (error.response && !error.response.data.success) {
-        setError(error.response.data.error);
-      } else if (error.response) {
-        setError(`Server error: ${error.response.status}`);
+      if (error.response) {
+        // The server responded with a status code that falls out of the range of 2xx
+        const errorMessage = error.response.data?.error || 'Authentication failed';
+        setError(errorMessage);
       } else if (error.request) {
-        setError('Network error - no response from server');
+        // The request was made but no response was received
+        setError('Could not reach the server. Please check your internet connection.');
       } else {
-        setError(error.message || 'An unexpected error occurred');
+        // Something happened in setting up the request
+        setError('An error occurred. Please try again.');
       }
     } finally {
       setLoading(false);
