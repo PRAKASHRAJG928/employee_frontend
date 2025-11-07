@@ -3,6 +3,17 @@ import axios from "axios";
 import { useAuth } from "../context/useAuth";
 import { useNavigate } from "react-router-dom";
 
+// API base URL - change this based on environment
+const API_BASE_URL = "https://employee-api-backend.vercel.app";
+
+// Create axios instance with default config
+const api = axios.create({
+  baseURL: API_BASE_URL,
+  headers: {
+    'Content-Type': 'application/json'
+  }
+});
+
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -27,14 +38,8 @@ const Login = () => {
     setError(null);
     setLoading(true);
     try {
-      const response = await axios.post("https://employee-api-backend.vercel.app/api/auth/login", { 
-        email, 
-        password 
-      }, {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      });
+      console.log('Attempting login to:', `${API_BASE_URL}/api/auth/login`);
+      const response = await api.post("/api/auth/login", { email, password });
       console.log("Login response:", response.data);
       if (response.data.success) {
         login(response.data.user);
@@ -46,17 +51,22 @@ const Login = () => {
         }
       }
     } catch (error) {
-      console.error('Login error:', error);
-      if (error.response) {
-        // The server responded with a status code that falls out of the range of 2xx
-        const errorMessage = error.response.data?.error || 'Authentication failed';
-        setError(errorMessage);
-      } else if (error.request) {
-        // The request was made but no response was received
-        setError('Could not reach the server. Please check your internet connection.');
+      // Log detailed error information for debugging
+      console.error('Login error details:', {
+        error,
+        status: error.response?.status,
+        data: error.response?.data,
+        message: error.message
+      });
+
+      if (error.response?.status === 404) {
+        setError('Login service is not available (404). Please check the API endpoint.');
+      } else if (error.response?.data?.error) {
+        setError(error.response.data.error);
+      } else if (!error.response && error.request) {
+        setError('Cannot connect to the server. Please check your internet connection.');
       } else {
-        // Something happened in setting up the request
-        setError('An error occurred. Please try again.');
+        setError(`Login failed: ${error.message || 'Unknown error'}`);
       }
     } finally {
       setLoading(false);
