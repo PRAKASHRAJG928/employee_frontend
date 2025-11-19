@@ -1,4 +1,4 @@
-import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import './index.css'
 import Login from './pages/Login';
 import AdminDashboard from './pages/AdminDashboard';
@@ -36,7 +36,7 @@ import AttendanceReport from './components/attendance/AttendanceReport';
 function App() {
   return (
     <AuthContext>
-      <HashRouter>
+      <BrowserRouter>
         <Routes>
           <Route path='/' element={<Navigate to="/login" />}></Route>
           <Route path='/login' element={<Login />}></Route>
@@ -98,7 +98,7 @@ function App() {
             <Route path="/employee-dashboard/settings" element={<EmployeeSettings />} />
           </Route>
         </Routes>
-      </HashRouter>
+      </BrowserRouter>
     </AuthContext>
   )
 }
