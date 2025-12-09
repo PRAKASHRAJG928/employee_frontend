@@ -1,16 +1,82 @@
-# React + Vite
+Employee Management System (EMS) – Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A responsive Employee Management System (EMS) frontend application built using React.js and Tailwind CSS. This project provides separate Admin and Employee portals with role-based access and seamless integration with a MERN backend via REST APIs.
 
-Currently, two official plugins are available:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+📌 Project Overview
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+The EMS Frontend enables organizations to manage employees, departments, attendance, leaves, salaries, and reports through an intuitive user interface. The application focuses on usability, security, and scalability while following modern UI/UX practices.
 
-## Expanding the ESLint configuration
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+✅ Features
+
+🔐 Authentication & Authorization
+
+Secure login for Admin and Employee roles
+
+JWT-based role handling
+
+Protected routes with role-based access
+
+
+📊 Admin Portal
+
+Dashboard with total employees, departments, and leave summaries
+
+Employee management (Add, View, Edit, Delete, Update Salary)
+
+Department management (Add, Edit, Delete)
+
+Leave management (Approve / Reject employee leave requests)
+
+Attendance management (Present / Absent / Sick / Leave)
+
+Reports view with export option (Excel/PDF via backend)
+
+Admin profile & password update
+
+
+👨‍💼 Employee Portal
+
+View personal profile details
+
+Apply for leave with date range and description
+
+View attendance and salary details
+
+Change password
+
+
+🎨 UI & UX
+
+Responsive design using Tailwind CSS
+
+Clean layout with limited color palette
+
+Reusable components and forms
+
+User-friendly validation and notifications
+
+
+
+---
+
+🛠 Tech Stack
+
+Frontend: React.js
+
+Styling: Tailwind CSS
+
+Routing: React Router DOM
+
+API Communication: Axios
+
+State Management: React Hooks / Context API
+
+Authentication: JWT (handled via backend)
+
+
